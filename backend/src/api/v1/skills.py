@@ -16,7 +16,6 @@ router = APIRouter(route_class=DishkaRoute, prefix="/skills", tags=["Skills"])
 @router.post(
     "",
     status_code=status.HTTP_201_CREATED,
-    response_model=SkillRead,
     responses={
         400: {"description": "Невалидные данные"},
         401: {"description": "Не аутентифицирован"},
@@ -47,7 +46,6 @@ async def create_skill(
 
 @router.get(
     "/users/{user_id}",
-    response_model=list[SkillRead],
     responses={
         200: {
             "description": "Список навыков пользователя",
@@ -56,6 +54,7 @@ async def create_skill(
     },
 )
 async def get_user_skills(
+    response: Response,
     user_id: Annotated[int, Path(gt=0)],
     skill_type: Annotated[SkillType | None, Query()] = None,
     limit: Annotated[int, Query(ge=1, le=100)] = 100,
@@ -65,12 +64,12 @@ async def get_user_skills(
 ) -> list[SkillRead]:
     async with uow:
         skills, total = await skill_service.get_user_skills(user_id, skill_type, limit, offset)
+        response.headers["X-Total-Count"] = str(total)
         return skills
 
 
 @router.put(
     "/{skill_id}",
-    response_model=SkillRead,
     responses={
         400: {"description": "Невалидные данные"},
         401: {"description": "Не аутентифицирован"},
