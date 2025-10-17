@@ -1,0 +1,9 @@
+[project]
+name = "PeerMatch"
+version = "0.1.0"
+description = "PeerMatch is a platform for changing skills and connecting with others."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.119.0",
+]
