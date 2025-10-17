@@ -1,11 +1,6 @@
 from dishka import Provider, Scope, provide
 
 from src.core.config import (
-    ElasticSearchConfig,
-    JWTConfig,
-    PostgresConfig,
-    RedisConfig,
-    S3Config,
     Settings,
     settings,
 )
