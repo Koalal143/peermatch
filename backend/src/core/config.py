@@ -44,6 +44,11 @@ class GigaChatEmbeddingsConfig(BaseModel):
     api_key: SecretStr
 
 
+class QdrantConfig(BaseModel):
+    host: str
+    port: int
+
+
 class ServerConfig(BaseModel):
     url: str
     host: str
@@ -64,6 +69,7 @@ class Settings(BaseSettings):
     postgres: PostgresConfig
     jwt: JWTConfig
     redis: RedisConfig
+    qdrant: QdrantConfig
     mode: Literal["dev", "test", "prod"] = Field(
         default="prod", description="Application mode"
     )
