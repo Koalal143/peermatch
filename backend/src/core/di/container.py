@@ -5,11 +5,15 @@ from src.core.di.providers import (
     ConfigProvider,
     DatabaseProvider,
     RedisProvider,
+    RepositoriesProvider,
+    ServicesProvider,
 )
 
 container = make_async_container(
     ConfigProvider(),
     DatabaseProvider(),
     RedisProvider(),
+    RepositoriesProvider(),
+    ServicesProvider(),
     FastapiProvider(),
 )

@@ -1,12 +1,12 @@
 from dishka import Provider, Scope, provide
 from redis.asyncio import Redis
 
-from src.core.config import settings
+from src.core.config import Settings
 
 
 class RedisProvider(Provider):
     scope = Scope.APP
 
     @provide
-    def get_redis(self) -> Redis:
-        return Redis.from_url(settings.redis.url.get_secret_value())
+    def get_redis(self, settings: Settings) -> Redis:
+        return Redis(host=settings.redis.host, port=settings.redis.port, db=settings.redis.db)

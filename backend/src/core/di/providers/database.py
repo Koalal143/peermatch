@@ -3,17 +3,17 @@ from collections.abc import AsyncIterator
 from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
-from src.core.config import PostgresConfig
+from src.core.config import Settings
 from src.db.manager import DatabaseManager
 from src.db.uow import SQLAlchemyUnitOfWork
 
 
 class DatabaseProvider(Provider):
     @provide(scope=Scope.APP)
-    def get_database_engine(self, config: PostgresConfig) -> AsyncEngine:
+    def get_database_engine(self, settings: Settings) -> AsyncEngine:
         return create_async_engine(
-            config.url,
-            echo=config.echo,
+            settings.postgres.url.get_secret_value(),
+            echo=settings.postgres.echo,
             pool_size=10,
             max_overflow=20,
         )
