@@ -45,6 +45,11 @@ class SkillRepository:
 
         return skills, total
 
+    async def get_by_ids(self, skill_ids: list[int]) -> Sequence[Skill]:
+        stmt = select(Skill).where(Skill.id.in_(skill_ids))
+        result = await self.session.scalars(stmt)
+        return result.all()
+
     async def update(self, skill_id: int, name: str | None = None, description: str | None = None) -> Skill | None:
         skill = await self.get(skill_id)
         if not skill:
