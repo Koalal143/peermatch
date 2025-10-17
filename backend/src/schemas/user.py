@@ -17,3 +17,9 @@ class UserRead(BaseReadSchema):
 class UserUpdate(BaseModel):
     username: str | None = Field(None, min_length=3, max_length=50)
     email: EmailStr | None = Field(None, min_length=3, max_length=255)
+
+
+class UserLogin(BaseModel):
+    email: EmailStr | None = None
+    username: str | None = None
+    password: str
