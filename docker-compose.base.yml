@@ -1,0 +1,22 @@
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend-network
+
+volumes:
+  redis_data:
+
+networks:
+  backend-network:
+    driver: bridge
