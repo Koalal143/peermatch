@@ -1,0 +1,20 @@
+{{ server_name }} {
+
+    # Проксирование к бекенду
+    reverse_proxy {{ backend_host }}:{{ backend_port }} {
+        # Таймауты
+        timeout 30s
+        dial_timeout 10s
+
+        
+        # Заголовки для проксирования
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+        
+        # Retry policy
+        fail_duration 30s
+        max_fails 3
+    }
+}
