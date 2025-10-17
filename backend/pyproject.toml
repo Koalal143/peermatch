@@ -16,6 +16,7 @@ dependencies = [
     "sqlalchemy>=2.0.44",
     "uvicorn>=0.37.0",
     "passlib[argon2]>=1.7.4",
+    "langchain-gigachat>=0.3.12",
 ]
 
 [dependency-groups]
