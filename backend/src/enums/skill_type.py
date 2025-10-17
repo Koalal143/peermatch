@@ -1,6 +1,6 @@
-from enum import Enum, auto
+from enum import Enum
 
 
-class SkillType(Enum):
-    INCOMING = auto()
-    OUTGOING = auto()
+class SkillType(str, Enum):
+    INCOMING = "INCOMING"
+    OUTGOING = "OUTGOING"
