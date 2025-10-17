@@ -40,6 +40,10 @@ class RedisConfig(BaseModel):
     db: int
 
 
+class GigaChatEmbeddingsConfig(BaseModel):
+    api_key: SecretStr
+
+
 class ServerConfig(BaseModel):
     url: str
     host: str
@@ -56,6 +60,7 @@ class Settings(BaseSettings):
     )
 
     server: ServerConfig
+    gigachat_embeddings: GigaChatEmbeddingsConfig
     postgres: PostgresConfig
     jwt: JWTConfig
     redis: RedisConfig
