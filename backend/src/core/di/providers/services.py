@@ -1,7 +1,9 @@
 from dishka import Provider, Scope, provide
 
 from src.repositories.refresh_token import RefreshTokenRepository
+from src.repositories.skill import SkillRepository
 from src.repositories.user import UserRepository
+from src.services.skill import SkillService
 from src.services.token import RefreshTokenService, TokenService
 from src.services.user import UserService
 
@@ -10,6 +12,10 @@ class ServicesProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def get_user_service(self, user_repo: UserRepository) -> UserService:
         return UserService(user_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def get_skill_service(self, skill_repo: SkillRepository) -> SkillService:
+        return SkillService(skill_repo)
 
     @provide(scope=Scope.REQUEST)
     def get_token_service(
