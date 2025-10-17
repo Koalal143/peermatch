@@ -1,7 +1,10 @@
+from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.api import router
 from src.core.config import settings
+from src.core.di.container import container
 
 app = FastAPI(
     title="PeerMatch",
@@ -17,3 +20,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+setup_dishka(container, app)
+app.include_router(router)
