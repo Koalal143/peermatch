@@ -33,4 +33,25 @@ class UserRepository:
         result = await self.session.scalars(stmt)
         return result.all()
 
+    async def update(self, user_id: int, username: str | None = None, email: str | None = None) -> User | None:
+        user = await self.get(user_id)
+        if not user:
+            return None
+        if username is not None:
+            user.username = username
+        if email is not None:
+            user.email = email
+        await self.session.flush()
+        await self.session.refresh(user)
+        return user
 
+    async def edit(self, user_id: int, **kwargs) -> User | None:
+        user = await self.get(user_id)
+        if not user:
+            return None
+        for key, value in kwargs.items():
+            if value is not None and hasattr(user, key):
+                setattr(user, key, value)
+        await self.session.flush()
+        await self.session.refresh(user)
+        return user
