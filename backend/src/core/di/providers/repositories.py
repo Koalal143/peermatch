@@ -1,6 +1,6 @@
 from dishka import Provider, Scope, provide
 from langchain_gigachat.embeddings import GigaChatEmbeddings
-from qdrant_client import QdrantClient
+from qdrant_client.async_qdrant_client import AsyncQdrantClient
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -29,5 +29,5 @@ class RepositoriesProvider(Provider):
         return EmbeddingsRepository(embeddings)
 
     @provide(scope=Scope.APP)
-    def get_vector_search_repository(self, client: QdrantClient) -> VectorSearchRepository:
+    def get_vector_search_repository(self, client: AsyncQdrantClient) -> VectorSearchRepository:
         return VectorSearchRepository(client)
