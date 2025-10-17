@@ -37,6 +37,7 @@ class JWTConfig(BaseModel):
 class RedisConfig(BaseModel):
     host: str
     port: int
+    db: int
 
 
 class ServerConfig(BaseModel):
