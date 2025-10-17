@@ -9,12 +9,13 @@ dependencies = [
     "asyncpg>=0.30.0",
     "dishka>=1.7.2",
     "fastapi>=0.119.0",
-    "pydantic>=2.12.2",
+    "pydantic[email]>=2.12.2",
     "pydantic-settings>=2.11.0",
     "python-jose>=3.5.0",
     "redis>=6.4.0",
     "sqlalchemy>=2.0.44",
     "uvicorn>=0.37.0",
+    "passlib[argon2]>=1.7.4",
 ]
 
 [dependency-groups]
