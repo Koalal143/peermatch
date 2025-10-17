@@ -5,7 +5,9 @@ description = "PeerMatch is a platform for changing skills and connecting with o
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "asyncpg>=0.30.0",
     "fastapi>=0.119.0",
     "pydantic>=2.12.2",
     "pydantic-settings>=2.11.0",
+    "sqlalchemy>=2.0.44",
 ]
