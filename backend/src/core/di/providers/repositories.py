@@ -1,7 +1,9 @@
 from dishka import Provider, Scope, provide
+from langchain_gigachat.embeddings import GigaChatEmbeddings
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.repositories.embeddings import EmbeddingsRepository
 from src.repositories.refresh_token import RefreshTokenRepository
 from src.repositories.skill import SkillRepository
 from src.repositories.user import UserRepository
@@ -22,4 +24,6 @@ class RepositoriesProvider(Provider):
     ) -> RefreshTokenRepository:
         return RefreshTokenRepository(session, redis)
 
-
+    @provide(scope=Scope.APP)
+    def get_embeddings_repository(self, embeddings: GigaChatEmbeddings) -> EmbeddingsRepository:
+        return EmbeddingsRepository(embeddings)
