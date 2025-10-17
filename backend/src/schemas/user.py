@@ -19,6 +19,11 @@ class UserUpdate(BaseModel):
     email: EmailStr | None = Field(None, min_length=3, max_length=255)
 
 
+class UserPatch(BaseModel):
+    username: str | None = Field(None, min_length=3, max_length=50)
+    email: EmailStr | None = Field(None, min_length=3, max_length=255)
+
+
 class UserLogin(BaseModel):
     email: EmailStr | None = None
     username: str | None = None
