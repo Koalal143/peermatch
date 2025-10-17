@@ -1,4 +1,3 @@
-
 from typing import TYPE_CHECKING
 
 from sqlalchemy import String
@@ -8,7 +7,6 @@ from src.models.base import Base
 
 if TYPE_CHECKING:
     from src.models.skills import Skill
-
 
 
 class User(Base):

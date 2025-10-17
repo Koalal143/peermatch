@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.core.config import settings
 
-
 app = FastAPI(
     title="PeerMatch",
     description="API for PeerMatch",
