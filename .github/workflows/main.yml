@@ -1,0 +1,49 @@
+name: CI/CD for peermatch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+        shell: bash
+
+      - name: Create secrets files from variables
+        run: |
+          echo "${{ secrets.ANSIBLE_SECRETS_FILE }}" > deploy/ansible/secrets.yml
+          echo "${{ secrets.ENV_FILE }}" > .env
+          echo "${{ secrets.HOSTS_FILE }}" > deploy/ansible/inventory/hosts.ini
+        shell: bash
+
+      - name: Install ansible dependencies
+        run: ansible-galaxy install -r deploy/ansible/requirements.yml
+
+
+      - name: Run Ansible Playbook
+        run: ansible-playbook deploy/ansible/playbook.yml -i deploy/ansible/inventory/hosts.ini --ssh-extra-args='-o StrictHostKeyChecking=no'
