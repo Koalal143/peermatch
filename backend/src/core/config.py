@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PATH = Path(__file__).parent.parent.parent
@@ -9,7 +9,7 @@ PATH = Path(__file__).parent.parent.parent
 
 class PostgresConfig(BaseModel):
     user: str
-    password: str
+    password: SecretStr
     host: str
     port: int
     db: str
@@ -23,8 +23,8 @@ class PostgresConfig(BaseModel):
     }
 
     @property
-    def url(self) -> str:
-        return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+    def url(self) -> SecretStr:
+        return SecretStr(f"postgresql+asyncpg://{self.user}:{self.password.get_secret_value()}@{self.host}:{self.port}/{self.db}")
 
 
 class JWTConfig(BaseModel):
