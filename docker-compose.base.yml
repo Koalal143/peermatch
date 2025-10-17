@@ -27,6 +27,7 @@ services:
 
 volumes:
   redis_data:
+  qdrant_data:
 
 networks:
   backend-network:
