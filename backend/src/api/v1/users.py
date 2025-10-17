@@ -158,6 +158,147 @@ async def update_user(
             ) from e
 
 
+@router.get(
+    "/me",
+    summary="Получение профиля текущего пользователя",
+    description="Получение информации о профиле аутентифицированного пользователя",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {
+            "description": "Профиль пользователя успешно получен",
+            "model": UserRead,
+        },
+        401: {
+            "description": "Не аутентифицирован",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error_key": "invalid_refresh_token",
+                        "message": "Could not validate credentials: no scheme or token in Authorization header",
+                    }
+                }
+            },
+        },
+    },
+)
+async def get_current_user_profile(
+    current_user: CurrentUserDependency,
+) -> UserRead:
+    return UserRead.model_validate(current_user)
+
+
+@router.patch(
+    "/me",
+    summary="Обновление профиля текущего пользователя",
+    description="Частичное обновление данных профиля аутентифицированного пользователя. Можно обновить отдельные поля (username и/или email)",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {
+            "description": "Профиль пользователя успешно обновлен",
+            "model": UserRead,
+        },
+        400: {
+            "description": "Ошибка валидации данных",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": [
+                            {
+                                "type": "string_too_short",
+                                "loc": ["body", "username"],
+                                "msg": "String should have at least 3 characters",
+                                "input": "ab",
+                            }
+                        ]
+                    }
+                }
+            },
+        },
+        401: {
+            "description": "Не аутентифицирован",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error_key": "invalid_refresh_token",
+                        "message": "Could not validate credentials: no scheme or token in Authorization header",
+                    }
+                }
+            },
+        },
+        409: {
+            "description": "Конфликт: пользователь с таким именем или email уже существует",
+            "content": {
+                "application/json": {
+                    "examples": {
+                        "username_exists": {
+                            "value": {
+                                "error_key": "user_nickname_already_exists",
+                                "message": "Username already taken",
+                            }
+                        },
+                        "email_exists": {
+                            "value": {
+                                "error_key": "user_email_already_exists",
+                                "message": "Email already registered",
+                            }
+                        },
+                    }
+                }
+            },
+        },
+    },
+)
+async def update_current_user_profile(
+    user_in: UserPatch,
+    current_user: CurrentUserDependency,
+    user_service: FromDishka[UserService],
+    uow: FromDishka[SQLAlchemyUnitOfWork],
+) -> UserRead:
+    async with uow:
+        try:
+            user = await user_service.edit_user(
+                user_id=int(current_user.id),
+                current_user_id=int(current_user.id),
+                is_admin=False,
+                username=user_in.username,
+                email=user_in.email,
+            )
+            await uow.commit()
+            return user
+        except UserNicknameAlreadyExistsError as e:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail={
+                    "error_key": e.error_key,
+                    "message": e.message,
+                },
+            ) from e
+        except UserEmailAlreadyExistsError as e:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail={
+                    "error_key": e.error_key,
+                    "message": e.message,
+                },
+            ) from e
+        except InvalidUserDataError as e:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail={
+                    "error_key": e.error_key,
+                    "message": e.message,
+                },
+            ) from e
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail={
+                    "error_key": "internal_server_error",
+                    "message": "An unexpected error occurred",
+                },
+            ) from e
+
+
 @router.patch(
     "/{user_id}",
     summary="Частичное обновление пользователя",
