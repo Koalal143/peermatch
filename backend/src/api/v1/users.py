@@ -437,4 +437,3 @@ async def edit_user(
                     "message": "An unexpected error occurred",
                 },
             ) from e
-

@@ -1,6 +1,6 @@
-from datetime import datetime, UTC
+from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, String, Boolean
+from sqlalchemy import Boolean, DateTime, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.models.base import Base
@@ -13,5 +13,3 @@ class RefreshToken(Base):
     token: Mapped[str] = mapped_column(String(512), unique=True, index=True)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
-
-
