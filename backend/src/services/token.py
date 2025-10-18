@@ -16,7 +16,7 @@ from src.repositories.user import UserRepository
 from src.schemas.token import Token
 
 
-class TokenService: 
+class TokenService:
     def __init__(
         self,
         refresh_token_repository: RefreshTokenRepository,
