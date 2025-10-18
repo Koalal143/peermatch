@@ -41,8 +41,22 @@ class SkillService:
 
         return [SkillRead.model_validate(skill) for skill in skills], total
 
+    async def get_all_skills(
+        self, skill_type: SkillType | None = None, limit: int = 100, offset: int = 0
+    ) -> tuple[Sequence[SkillRead], int]:
+        skills, total = await self.skill_repository.get_all(skill_type, limit, offset)
+        return [SkillRead.model_validate(skill) for skill in skills], total
+
+    async def get_skill_by_id(self, skill_id: int) -> SkillRead:
+        skill = await self.skill_repository.get(skill_id)
+        if not skill:
+            msg = "Skill not found"
+            raise SkillNotFoundError(msg)
+        return SkillRead.model_validate(skill)
+
     async def get_skills_by_id(
-        self, skill_ids: list[int],
+        self,
+        skill_ids: list[int],
     ) -> Sequence[SkillRead]:
         skills = await self.skill_repository.get_by_ids(skill_ids)
         return [SkillRead.model_validate(skill) for skill in skills]
@@ -50,7 +64,7 @@ class SkillService:
     async def search_skills_by_query(
         self,
         query: str,
-        skill_type: SkillType = SkillType.INCOMING,
+        skill_type: SkillType | None = None,
         limit: int = 10,
         offset: int = 0,
     ) -> tuple[Sequence[SkillRead], int]:
