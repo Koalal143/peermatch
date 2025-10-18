@@ -58,5 +58,3 @@ class RefreshTokenRepository:
 
     async def delete_cached_refresh_token(self, token: str) -> None:
         await self.redis.delete(f"refresh_token:{token}")
-
-

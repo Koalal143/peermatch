@@ -5,10 +5,10 @@ from src.schemas.user import UserCreate, UserRead, UserUpdate
 __all__ = [
     "BaseReadSchema",
     "BaseSchema",
+    "SkillBulkDelete",
     "SkillCreate",
     "SkillRead",
     "SkillUpdate",
-    "SkillBulkDelete",
     "UserCreate",
     "UserRead",
     "UserUpdate",
