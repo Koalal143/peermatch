@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 
 from src.enums.skill_type import SkillType
 from src.schemas.base import BaseReadSchema, BaseSchema
+from src.schemas.user import UserRead
 
 
 class SkillCreate(BaseSchema):
@@ -20,6 +21,7 @@ class SkillRead(BaseReadSchema):
     name: str
     description: str | None = None
     user_id: int
+    user: UserRead | None = None
 
 
 class SkillBulkDelete(BaseModel):
