@@ -85,9 +85,7 @@ async def create_skill(
             "description": "Список навыков пользователя",
             "model": list[SkillRead],
             "headers": {
-                "X-Total-Count": {
-                    "description": "Общее количество навыков пользователя (без учета пагинации)"
-                }
+                "X-Total-Count": {"description": "Общее количество навыков пользователя (без учета пагинации)"}
             },
         },
     },
@@ -340,12 +338,38 @@ async def bulk_delete_skills(
 @router.get("/vector-search")
 async def get_skills_by_vector_search(
     response: Response,
-    limit: Annotated[int, Query(ge=1, le=100)],
-    offset: Annotated[int, Query(ge=0)],
     query: Annotated[str, Query()],
-    skill_service: FromDishka[SkillService],
+    limit: Annotated[int, Query(ge=1, le=100)] = 100,
+    offset: Annotated[int, Query(ge=0)] = 0,
     skill_type: Annotated[SkillType | None, Query()] = None,
+    skill_service: FromDishka[SkillService] = None,
 ) -> list[SkillRead]:
     result, total = await skill_service.search_skills_by_query(query, skill_type=skill_type, limit=limit, offset=offset)
     response.headers["X-Total-Count"] = str(total)
     return result
+
+
+@router.get(
+    "",
+    summary="Получение всех навыков",
+    description="Получение всех навыков в системе с поддержкой фильтрации по типу (INCOMING/OUTGOING) и пагинации. Общее количество навыков возвращается в заголовке X-Total-Count",
+    responses={
+        200: {
+            "description": "Список всех навыков",
+            "model": list[SkillRead],
+            "headers": {"X-Total-Count": {"description": "Общее количество навыков (без учета пагинации)"}},
+        },
+    },
+)
+async def get_all_skills(
+    response: Response,
+    skill_type: Annotated[SkillType | None, Query()] = None,
+    limit: Annotated[int, Query(ge=1, le=100)] = 100,
+    offset: Annotated[int, Query(ge=0)] = 0,
+    skill_service: FromDishka[SkillService] = None,
+    uow: FromDishka[SQLAlchemyUnitOfWork] = None,
+) -> list[SkillRead]:
+    async with uow:
+        skills, total = await skill_service.get_all_skills(skill_type, limit, offset)
+        response.headers["X-Total-Count"] = str(total)
+        return skills
