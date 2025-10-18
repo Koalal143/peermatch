@@ -38,22 +38,25 @@ class VectorSearchRepository:
         await self._client.delete(collection_name=self.collection_name, points_selector=skill_ids)
 
     async def search(
-        self, query_vector: list[float], skilltype: SkillType, limit: int = 10, offset: int = 0
+        self, query_vector: list[float], skilltype: SkillType | None = None, limit: int = 10, offset: int = 0
     ) -> tuple[qdrant_types.QueryResponse, int]:
-        query_filter = models.Filter(
-            must=[
-                models.FieldCondition(
-                    key="type",
-                    match=models.MatchValue(value=skilltype.value),
-                )
-            ]
-        )
+        if skilltype:
+            query_filter = models.Filter(
+                must=[
+                    models.FieldCondition(
+                        key="type",
+                        match=models.MatchValue(value=skilltype.value),
+                    )
+                ]
+            )
+        else:
+            query_filter = None
         result_best_score = await self._client.query_points(
             collection_name=self.collection_name, query=query_vector, query_filter=query_filter, limit=1
         )
         if not result_best_score:
-            return None
-        threshold = result_best_score.points[0].score * 0.89
+            return None, 0
+        threshold = result_best_score.points[0].score * 0.5
         total = await self._client.count(collection_name=self.collection_name, count_filter=query_filter)
         return await self._client.query_points(
             collection_name=self.collection_name,
