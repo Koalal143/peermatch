@@ -10,9 +10,7 @@ class DatabaseManager:
         sessionmaker: async_sessionmaker[AsyncSession] | None = None,
     ) -> None:
         self.engine = engine
-        self.session_factory = sessionmaker or async_sessionmaker(
-            engine, expire_on_commit=False
-        )
+        self.session_factory = sessionmaker or async_sessionmaker(engine, expire_on_commit=False)
 
     async def get_db_session(self) -> AsyncGenerator[AsyncSession, None]:
         async with self.session_factory() as session:

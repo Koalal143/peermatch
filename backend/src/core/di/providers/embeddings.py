@@ -10,5 +10,6 @@ class GigaChatEmbeddingsProvider(Provider):
     @provide
     def get_gigachat_embeddings(self, settings: Settings) -> GigaChatEmbeddings:
         return GigaChatEmbeddings(
-            credentials=settings.gigachat_embeddings.api_key.get_secret_value(), verify_ssl_certs=False,
+            credentials=settings.gigachat_embeddings.api_key.get_secret_value(),
+            verify_ssl_certs=False,
         )

@@ -11,4 +11,3 @@ class SkillAccessDeniedError(BaseAppError):
 
 class InvalidSkillDataError(BaseAppError):
     error_key = "invalid_skill_data"
-
