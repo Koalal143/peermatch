@@ -55,4 +55,3 @@ async def get_current_user_or_none(
 
 CurrentUserDependency = Annotated[User, Depends(get_current_user)]
 CurrentUserOrNoneDependency = Annotated[User | None, Depends(get_current_user_or_none)]
-
