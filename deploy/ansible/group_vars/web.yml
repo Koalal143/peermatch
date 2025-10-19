@@ -1,3 +1,5 @@
 app_dir: "/srv/app"
 backend_host: "localhost"
 backend_port: "8000"
+frontend_host: "localhost"
+frontend_port: "3000"
