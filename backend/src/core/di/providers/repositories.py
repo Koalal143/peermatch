@@ -4,6 +4,7 @@ from qdrant_client.async_qdrant_client import AsyncQdrantClient
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.repositories.chat import ChatRepository, MessageRepository
 from src.repositories.embeddings import EmbeddingsRepository
 from src.repositories.refresh_token import RefreshTokenRepository
 from src.repositories.skill import SkillRepository
@@ -31,3 +32,11 @@ class RepositoriesProvider(Provider):
     @provide(scope=Scope.APP)
     def get_vector_search_repository(self, client: AsyncQdrantClient) -> VectorSearchRepository:
         return VectorSearchRepository(client)
+
+    @provide(scope=Scope.REQUEST)
+    def get_chat_repository(self, session: AsyncSession) -> ChatRepository:
+        return ChatRepository(session)
+
+    @provide(scope=Scope.REQUEST)
+    def get_message_repository(self, session: AsyncSession) -> MessageRepository:
+        return MessageRepository(session)
