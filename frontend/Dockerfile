@@ -18,11 +18,8 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 COPY --from=base /app/public ./public
-COPY --from=base /app/.next/standalone ./
+COPY --from=base /app/.next/standalone/* ./
 COPY --from=base /app/.next/static ./.next/static
-
-RUN chown -R nextjs:nodejs /app
-USER nextjs
 
 EXPOSE 3000
 
