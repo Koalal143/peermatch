@@ -105,40 +105,6 @@ async def get_user_skills(
         return skills
 
 
-@router.get(
-    "/{skill_id}",
-    summary="Получение навыка по ID",
-    description="Получение полной информации о навыке по его ID, включая информацию о пользователе",
-    responses={
-        200: {
-            "description": "Информация о навыке",
-            "model": SkillRead,
-        },
-        404: {
-            "description": "Навык не найден",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "error_key": "skill_not_found",
-                        "message": "Skill not found",
-                    }
-                }
-            },
-        },
-    },
-)
-async def get_skill_by_id(
-    skill_id: Annotated[int, Path(gt=0)],
-    skill_service: FromDishka[SkillService] = None,
-) -> SkillRead:
-    try:
-        return await skill_service.get_skill_by_id(skill_id)
-    except SkillNotFoundError as e:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail={"error_key": e.error_key, "message": str(e)}
-        ) from e
-
-
 @router.put(
     "/{skill_id}",
     summary="Обновление навыка",
@@ -381,6 +347,40 @@ async def get_skills_by_vector_search(
     result, total = await skill_service.search_skills_by_query(query, skill_type=skill_type, limit=limit, offset=offset)
     response.headers["X-Total-Count"] = str(total)
     return result
+
+
+@router.get(
+    "/{skill_id}",
+    summary="Получение навыка по ID",
+    description="Получение полной информации о навыке по его ID, включая информацию о пользователе",
+    responses={
+        200: {
+            "description": "Информация о навыке",
+            "model": SkillRead,
+        },
+        404: {
+            "description": "Навык не найден",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error_key": "skill_not_found",
+                        "message": "Skill not found",
+                    }
+                }
+            },
+        },
+    },
+)
+async def get_skill_by_id(
+    skill_id: Annotated[int, Path(gt=0)],
+    skill_service: FromDishka[SkillService] = None,
+) -> SkillRead:
+    try:
+        return await skill_service.get_skill_by_id(skill_id)
+    except SkillNotFoundError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail={"error_key": e.error_key, "message": str(e)}
+        ) from e
 
 
 @router.get(
