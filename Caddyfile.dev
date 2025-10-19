@@ -1,0 +1,41 @@
+:80 {
+    log {
+        output stdout
+        format console
+    }
+
+    handle /api/v1/ws/* {
+        # Удаляем префикс /api перед отправкой на бекенд
+        # uri strip_prefix /api
+
+        reverse_proxy backend:8000 {
+            # Заголовки
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            # WebSocket поддержка
+            header_up Connection "upgrade"
+            header_up Upgrade "websocket"
+        }
+    }
+
+    handle /api/* {
+        uri strip_prefix /api
+
+        # Проксируем на бекенд
+        reverse_proxy backend:8000 {
+            # Заголовки
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+        }
+    }
+
+    # Проксирование всего остального на фронтенд
+    handle /* {
+        reverse_proxy frontend:3000 {
+            # Заголовки
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+        }
+    }
+}
+
