@@ -7,7 +7,6 @@ from src.repositories.refresh_token import RefreshTokenRepository
 from src.repositories.skill import SkillRepository
 from src.repositories.user import UserRepository
 from src.repositories.vector_search import VectorSearchRepository
-from src.services.call import CallRepository, CallService
 from src.services.chat import ChatService
 from src.services.skill import SkillService
 from src.services.token import RefreshTokenService, TokenService
@@ -43,13 +42,3 @@ class ServicesProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def get_chat_service(self, chat_repo: ChatRepository, message_repo: MessageRepository) -> ChatService:
         return ChatService(chat_repo, message_repo)
-
-    @provide(scope=Scope.REQUEST)
-    def get_call_repository(self, uow: SQLAlchemyUnitOfWork) -> CallRepository:
-        return CallRepository(uow)
-
-    @provide(scope=Scope.REQUEST)
-    def get_call_service(
-        self, chat_repo: ChatRepository, call_repo: CallRepository, user_repo: UserRepository
-    ) -> CallService:
-        return CallService(chat_repo, call_repo, user_repo)
