@@ -20,7 +20,6 @@
   - [Локальная разработка](#локальная-разработка)
   - [Развертывание через Ansible](#развертывание-через-ansible)
 - [Архитектура проекта](#архитектура-проекта)
-- [Переменные окружения](#переменные-окружения)
 - [Подробное описание переменных окружения](#подробное-описание-переменных-окружения)
 
 ## Установка и развертывание
@@ -74,7 +73,7 @@ uv sync
 
 2. **Настройте переменные окружения:**
 ```bash
-cp env.example .env
+cp .env.example .env
 # Отредактируйте .env для локальной разработки
 ```
 
@@ -211,62 +210,6 @@ MPIThack/
 3. **API-First** - четкое разделение frontend и backend
 4. **Microservices-ready** - готовность к разделению на микросервисы
 5. **Real-time** - поддержка WebSocket для live коммуникации
-
-## Переменные окружения
-
-Создайте файл `.env` на основе `env.example` и настройте следующие переменные:
-
-### Основные настройки
-```env
-# Режим работы (dev/prod)
-MODE=dev
-
-# Настройки сервера
-SERVER__URL=http://localhost
-SERVER__HOST=0.0.0.0
-SERVER__PORT=8000
-SERVER__ALLOWED_ORIGINS=["http://localhost:3000","http://localhost:8000"]
-```
-
-### База данных PostgreSQL
-```env
-POSTGRES__USER=postgres
-POSTGRES__PASSWORD=yourdbpassword
-POSTGRES__HOST=postgres
-POSTGRES__PORT=5432
-POSTGRES__DB=postgres
-POSTGRES__ECHO=false
-```
-
-### Redis
-```env
-REDIS__HOST=redis
-REDIS__PORT=6379
-REDIS__DB=0
-```
-
-### JWT токены
-```env
-JWT__SECRET_KEY=your-secret-key-here
-JWT__ALGORITHM=HS256
-JWT__ACCESS_TOKEN_EXPIRE_MINUTES=30
-JWT__REFRESH_TOKEN_EXPIRE_DAYS=7
-```
-
-### AI сервисы
-```env
-# GigaChat для embeddings
-GIGACHAT_EMBEDDINGS__API_KEY=your-gigachat-api-key
-
-# Qdrant векторная база
-QDRANT__HOST=qdrant
-QDRANT__PORT=6333
-```
-
-### Frontend
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8000/api
-```
 
 ## Разработка
 
