@@ -20,6 +20,25 @@ services:
       - ./backend/alembic:/app/alembic
     networks:
       - backend-network
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - backend-network
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+      - NODE_ENV=production
 
 
 volumes:
