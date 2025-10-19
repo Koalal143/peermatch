@@ -7,9 +7,6 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: undefined,
-  },
 }
 
 export default nextConfig
