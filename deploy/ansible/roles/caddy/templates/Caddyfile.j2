@@ -1,4 +1,8 @@
-{{ server_name }} {
+{{ server_name }}:443 {
+    log {
+        output stdout
+        format console
+    }
 
     handle /api/* {
         reverse_proxy {{ backend_host }}:{{ backend_port }} {

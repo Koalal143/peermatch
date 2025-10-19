@@ -1,4 +1,4 @@
 postgresql_version: 15
-backend_db: "postgres"
+backend_db: "peermatch"
 postgresql_user: "postgres"
 postgresql_apt_release: jammy
